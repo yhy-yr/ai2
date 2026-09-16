@@ -120,6 +120,28 @@ http://localhost:5173/#/ai
 
 登录后统一进入 `/workspace`，系统会根据管理员、医生或患者身份显示对应工作区。
 
+## Railway 公网部署
+
+项目根目录提供了 `Dockerfile` 和 `railway.json`。Docker 构建会先编译 Vue 前端，再将静态文件打包进 Spring Boot，因此只需部署一个应用服务和一个 MySQL 服务。
+
+1. 在 Railway 新建项目，选择 `Deploy from GitHub repo` 并连接本仓库。
+2. 在同一个 Railway 项目中点击 `+ New`，添加 MySQL。
+3. 在应用服务的 Variables 中配置以下变量（示例假设数据库服务名为 `MySQL`）：
+
+```text
+DB_URL=jdbc:mysql://${{MySQL.MYSQLHOST}}:${{MySQL.MYSQLPORT}}/${{MySQL.MYSQLDATABASE}}?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&useSSL=false
+DB_USERNAME=${{MySQL.MYSQLUSER}}
+DB_PASSWORD=${{MySQL.MYSQLPASSWORD}}
+DEEPSEEK_API_KEY=新生成的 DeepSeek API Key
+```
+
+`DEEPSEEK_API_KEY` 可以不设置；此时系统自动使用本地规则模式。不要把真实 API Key、数据库密码或其他密钥写进代码或提交到 Git。
+
+4. 部署完成后，在应用服务的 Settings -> Networking 中点击 `Generate Domain`。
+5. 访问生成的域名即可进入系统。健康检查路径为 `/`，Railway 会从 `PORT` 环境变量自动提供运行端口。
+
+如数据库服务名不是 `MySQL`，请将变量引用中的 `MySQL` 改为实际服务名。
+
 ## 完整演示流程
 
 1. 患者登录。

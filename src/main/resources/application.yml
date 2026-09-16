@@ -1,18 +1,17 @@
 server:
   port: ${PORT:8081}
 
-
 spring:
   application:
     name: localcare-healthcare
   datasource:
-    url: ${DB_URL:jdbc:mysql://localhost:3306/localcare_ai?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false}
-    username: ${DB_USERNAME:root}
-    password: ${DB_PASSWORD}
+    url: "${DB_URL:jdbc:mysql://${MYSQLHOST:localhost}:${MYSQLPORT:3306}/${MYSQLDATABASE:localcare_ai}?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false}"
+    username: ${DB_USERNAME:${MYSQLUSER:root}}
+    password: ${DB_PASSWORD:${MYSQLPASSWORD:}}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
 deepseek:
-  api-key: ${DEEPSEEK_API_KEY}
+  api-key: ${DEEPSEEK_API_KEY:}
   base-url: https://api.deepseek.com
   model: deepseek-chat
-  enabled: true
+  enabled: ${DEEPSEEK_ENABLED:true}
